@@ -73,52 +73,75 @@ STITCH_CSS = """
 
     /* Buttons */
     .stButton > button {
-        background-color: #000666 !important;
+        background: linear-gradient(135deg, #000666 0%, #1A237E 100%) !important;
         color: #FFFFFF !important;
         border: none !important;
-        border-radius: 0.375rem !important;
+        border-radius: 0.5rem !important;
         font-weight: 600 !important;
-        font-size: 15px !important;
-        padding: 0.55rem 1.25rem !important;
-        transition: all 0.15s ease-in-out !important;
+        font-size: 14px !important;
+        padding: 0.6rem 1.35rem !important;
+        box-shadow: 0 4px 12px rgba(0, 6, 102, 0.15) !important;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
     .stButton > button:hover {
-        background-color: #1A237E !important;
+        background: linear-gradient(135deg, #1A237E 0%, #283593 100%) !important;
         color: #FFFFFF !important;
-        transform: scale(0.99) !important;
+        box-shadow: 0 6px 18px rgba(0, 6, 102, 0.25) !important;
+        transform: translateY(-1px) !important;
     }
 
     /* Secondary / outline buttons */
     .stButton > button[kind="secondary"] {
         background-color: #FFFFFF !important;
         color: #000666 !important;
-        border: 2px solid #000666 !important;
+        border: 1.5px solid #000666 !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
     }
     .stButton > button[kind="secondary"]:hover {
         background-color: #F0EDED !important;
+        transform: translateY(-1px) !important;
     }
 
     /* Form Inputs */
     .stTextInput input, .stNumberInput input, .stTextArea textarea, .stSelectbox select {
         border: 1.5px solid #C6C5D4 !important;
-        border-radius: 0.375rem !important;
+        border-radius: 0.5rem !important;
         background-color: #FFFFFF !important;
         color: #1B1C1C !important;
         font-size: 14px !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+        transition: all 0.15s ease !important;
     }
     .stTextInput input:focus, .stTextArea textarea:focus {
         border-color: #000666 !important;
-        box-shadow: 0 0 0 2px rgba(0, 6, 102, 0.1) !important;
+        box-shadow: 0 0 0 3px rgba(0, 6, 102, 0.12) !important;
+    }
+
+    /* Streamlit Bordered Container Cards */
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        border-radius: 14px !important;
+        border: 1px solid #C6C5D4 !important;
+        background-color: #FFFFFF !important;
+        box-shadow: 0 2px 8px rgba(0, 6, 102, 0.03) !important;
+        transition: all 0.2s ease !important;
+    }
+    [data-testid="stVerticalBlockBorderWrapper"]:hover {
+        border-color: #A5A5C0 !important;
+        box-shadow: 0 6px 18px rgba(0, 6, 102, 0.07) !important;
     }
 
     /* Stitch Container Cards */
     .stitch-card {
         background-color: #FFFFFF;
         border: 1px solid #C6C5D4;
-        border-radius: 0.75rem;
+        border-radius: 0.875rem;
         padding: 1.5rem;
         margin-bottom: 1.25rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        box-shadow: 0 3px 12px rgba(0, 6, 102, 0.04);
+        transition: all 0.2s ease;
+    }
+    .stitch-card:hover {
+        box-shadow: 0 6px 18px rgba(0, 6, 102, 0.07);
     }
 
     /* Breadcrumbs */
@@ -239,13 +262,14 @@ STITCH_CSS = """
         z-index: 10;
         width: 76px;
         height: 76px;
-        background-color: #000666;
+        background: linear-gradient(135deg, #000666 0%, #1A237E 100%);
         color: #FFFFFF;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 4px 14px rgba(0, 6, 102, 0.25);
+        box-shadow: 0 6px 20px rgba(0, 6, 102, 0.35);
+        transition: transform 0.2s ease;
     }
     @keyframes stitch-ping {
         75%, 100% { transform: scale(1.25); opacity: 0; }
@@ -256,30 +280,38 @@ STITCH_CSS = """
 
     /* Phrase Box */
     .stitch-phrase-box {
-        background-color: #FFFFFF;
-        border: 2px solid rgba(0, 6, 102, 0.2);
-        border-radius: 0.75rem;
-        padding: 1rem 1.25rem;
-        margin: 0.75rem 0;
+        background: linear-gradient(135deg, #FFFFFF 0%, #F6F3F2 100%);
+        border: 2px solid #000666;
+        border-radius: 0.875rem;
+        padding: 1.25rem 1.5rem;
+        margin: 1rem 0;
         text-align: center;
+        box-shadow: 0 4px 16px rgba(0, 6, 102, 0.06);
     }
     .stitch-phrase-text {
-        font-size: 24px;
-        font-weight: 700;
+        font-size: 26px;
+        font-weight: 800;
         color: #000666;
-        letter-spacing: 0.16em;
+        letter-spacing: 0.2em;
     }
 
     /* Bento Card */
     .stitch-bento-card {
         background-color: #FFFFFF;
         border: 1px solid #C6C5D4;
-        border-radius: 0.75rem;
-        padding: 1rem;
+        border-radius: 0.875rem;
+        padding: 1.15rem;
         height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        box-shadow: 0 2px 8px rgba(0, 6, 102, 0.03);
+        transition: all 0.2s ease;
+    }
+    .stitch-bento-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(0, 6, 102, 0.07);
+        border-color: #A5A5C0;
     }
 
     /* Chips */
@@ -324,6 +356,66 @@ STITCH_CSS = """
         -webkit-font-feature-settings: 'liga';
         -webkit-font-smoothing: antialiased;
         vertical-align: middle;
+    }
+
+    /* Stitch KPI Bento Card */
+    .stitch-kpi-card {
+        background-color: #FFFFFF;
+        border: 1px solid #C6C5D4;
+        border-radius: 0.875rem;
+        padding: 1.15rem 1.25rem;
+        box-shadow: 0 2px 6px rgba(0, 6, 102, 0.04);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .stitch-kpi-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 6, 102, 0.08);
+        border-color: #000666;
+    }
+    .stitch-kpi-accent {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #FF9933, #000666, #138808);
+    }
+    .stitch-kpi-value {
+        font-size: 26px;
+        font-weight: 700;
+        color: #000666;
+        line-height: 1.2;
+        margin: 6px 0;
+    }
+    .stitch-kpi-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #454652;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* Tabs & Dataframes Styling */
+    button[data-baseweb="tab"] {
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        color: #454652 !important;
+    }
+    button[data-baseweb="tab"][aria-selected="true"] {
+        color: #000666 !important;
+        border-bottom-color: #000666 !important;
+    }
+    .stDataFrame {
+        border: 1px solid #C6C5D4 !important;
+        border-radius: 0.75rem !important;
+        overflow: hidden !important;
     }
 </style>
 """
@@ -378,13 +470,78 @@ def render_stitch_header(title: str, subtitle: str = "", demo_mode: bool = True)
     badge_html = '<span class="stitch-demo-badge">Demo Mode</span>' if demo_mode else ''
     st.markdown(
         f"""
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #C6C5D4; padding-bottom: 10px; margin-bottom: 14px;">
-            <div>
-                <h2 style="font-size: 24px; font-weight: 700; color: #000666; margin: 0;">{title}</h2>
-                {f'<p style="font-size: 14px; color: #454652; margin: 3px 0 0 0;">{subtitle}</p>' if subtitle else ''}
+        <div style="position: relative; border-bottom: 1px solid #C6C5D4; padding-bottom: 12px; margin-bottom: 18px;">
+            <div style="position: absolute; bottom: -1px; left: 0; width: 140px; height: 3px; background: linear-gradient(90deg, #FF9933, #000666, #138808); border-radius: 2px;"></div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                    <h2 style="font-size: 24px; font-weight: 700; color: #000666; margin: 0;">{title}</h2>
+                    {f'<p style="font-size: 14px; color: #454652; margin: 4px 0 0 0;">{subtitle}</p>' if subtitle else ''}
+                </div>
+                <div>
+                    {badge_html}
+                </div>
             </div>
-            <div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_stitch_kpi_card(
+    title: str,
+    value: Any,
+    subtitle: str = "",
+    icon: str = "analytics",
+    badge_text: str = "",
+    badge_color: str = "primary",
+) -> None:
+    """Render a modern Stitch KPI Bento Card with icon, styled metric, and badge."""
+    badge_html = ""
+    if badge_text:
+        bg_col = "#E0E0FF" if badge_color == "primary" else ("#E8F5E9" if badge_color == "success" else "#FFF3E0")
+        tx_col = "#000767" if badge_color == "primary" else ("#1B5E20" if badge_color == "success" else "#E65100")
+        badge_html = f'<span style="background: {bg_col}; color: {tx_col}; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 9999px;">{badge_text}</span>'
+
+    st.markdown(
+        f"""
+        <div class="stitch-kpi-card">
+            <div class="stitch-kpi-accent"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <div class="stitch-kpi-title">
+                    <span class="material-symbols-outlined" style="font-size: 18px; color: #000666;">{icon}</span>
+                    <span>{title}</span>
+                </div>
                 {badge_html}
+            </div>
+            <div class="stitch-kpi-value">{value}</div>
+            {f'<div style="font-size: 12px; color: #767683; margin-top: 2px;">{subtitle}</div>' if subtitle else ''}
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_stitch_active_beneficiary_badge(name: str, beneficiary_id: str, district: str, language: str = "Hindi") -> None:
+    """Render a modern beneficiary identity card with avatar initials in the sidebar."""
+    clean_name = name or "Unnamed Beneficiary"
+    initials = "".join([part[0].upper() for part in clean_name.split()[:2]]) or "B"
+    st.markdown(
+        f"""
+        <div style="background: #FFFFFF; border: 1px solid #C6C5D4; border-radius: 12px; padding: 10px 12px; margin: 8px 0 12px 0; box-shadow: 0 1px 4px rgba(0,0,0,0.04);">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #000666, #1A237E); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,6,102,0.2);">
+                    {initials}
+                </div>
+                <div style="min-width: 0; flex: 1;">
+                    <div style="font-size: 13px; font-weight: 700; color: #000666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        {clean_name}
+                    </div>
+                    <div style="font-size: 11px; color: #454652; display: flex; align-items: center; gap: 4px; margin-top: 1px;">
+                        <span style="font-weight: 600; color: #1B1C1C;">{beneficiary_id}</span>
+                        <span>•</span>
+                        <span>{district}</span>
+                    </div>
+                </div>
             </div>
         </div>
         """,
@@ -394,13 +551,20 @@ def render_stitch_header(title: str, subtitle: str = "", demo_mode: bool = True)
 
 def render_stitch_completion_card(completion_pct: int) -> None:
     """Render the Stitch profile completion card with dynamic percentage and progress bar."""
+    badge_color = "#E8F5E9" if completion_pct >= 80 else ("#E0E0FF" if completion_pct >= 40 else "#FFF3E0")
+    text_color = "#1B5E20" if completion_pct >= 80 else ("#000767" if completion_pct >= 40 else "#E65100")
+    badge_text = "Match Ready 🚀" if completion_pct >= 80 else ("Intermediate Profile" if completion_pct >= 40 else "Initial Information")
     st.markdown(
         f"""
-        <div class="stitch-card">
+        <div class="stitch-card" style="position: relative; overflow: hidden; padding-top: 1.6rem;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #FF9933, #000666, #138808);"></div>
             <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                 <div>
-                    <div style="font-size: 17px; font-weight: 700; color: #000666;">Profile Completion</div>
-                    <div style="font-size: 13px; color: #454652; margin-top: 3px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 17px; font-weight: 700; color: #000666;">Profile Completion</span>
+                        <span style="background: {badge_color}; color: {text_color}; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 9999px;">{badge_text}</span>
+                    </div>
+                    <div style="font-size: 13px; color: #454652; margin-top: 4px;">
                         Complete your profile details to unlock more targeted NSQF skill pathways.
                     </div>
                 </div>
@@ -408,8 +572,8 @@ def render_stitch_completion_card(completion_pct: int) -> None:
                     {completion_pct}%
                 </div>
             </div>
-            <div class="stitch-progress-container">
-                <div class="stitch-progress-bar" style="width: {completion_pct}%;"></div>
+            <div class="stitch-progress-container" style="height: 10px; border-radius: 9999px; background: #EAE8E7; margin-top: 14px; overflow: hidden;">
+                <div class="stitch-progress-bar" style="width: {completion_pct}%; height: 100%; border-radius: 9999px; background: linear-gradient(90deg, #000666, #1A237E, #138808); transition: width 0.4s ease;"></div>
             </div>
         </div>
         """,
@@ -423,6 +587,74 @@ def render_stitch_phrase_card(phrase_str: str) -> None:
         f"""
         <div class="stitch-phrase-box">
             <div class="stitch-phrase-text">{phrase_str}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_stitch_trade_card(rank: int, trade: Dict[str, Any], portal_query: str = "") -> None:
+    """Render a modern aesthetic NSQF Trade Recommendation Card."""
+    trade_name = trade.get("trade_name", "")
+    nsqf_level = trade.get("nsqf_level", "")
+    sector = trade.get("sector", "")
+    demand = trade.get("demand_score", 0)
+    wage = trade.get("avg_monthly_wage_inr", 0)
+    score = trade.get("score", 0)
+    explanations = trade.get("explanations", [])
+
+    accent_colors = ["#FF9933", "#000666", "#138808"]
+    border_accent = accent_colors[(rank - 1) % len(accent_colors)]
+
+    url = f"/app/static/skill-portal/index.html?{portal_query}" if portal_query else "#"
+
+    exp_html = ""
+    if explanations:
+        exp_items = "".join([f"<li style='margin-bottom: 2px;'>{e}</li>" for e in explanations[:2]])
+        exp_html = f"""
+        <div style="background: #F6F3F2; border-radius: 8px; padding: 8px 12px; margin: 10px 0; font-size: 12px; color: #454652;">
+            <ul style="margin: 0; padding-left: 18px;">{exp_items}</ul>
+        </div>
+        """
+
+    st.markdown(
+        f"""
+        <div class="stitch-card" style="position: relative; overflow: hidden; border-left: 5px solid {border_accent}; margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px;">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 18px; font-weight: 700; color: #000666;">{rank}. {trade_name}</span>
+                        <span style="background: #FFF3E0; color: #E65100; border: 1px solid #FFE0B2; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 6px;">NSQF Level {nsqf_level}</span>
+                    </div>
+                    <span style="font-size: 12px; font-weight: 500; color: #454652; margin-top: 2px; display: inline-block;">Sector: <b>{sector}</b></span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <span style="background: #E0E0FF; color: #000767; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 9999px;">Match Score {score:.1f}</span>
+                </div>
+            </div>
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px;">
+                <div style="background: #FFFFFF; border: 1px solid #C6C5D4; padding: 6px 12px; border-radius: 8px; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+                    <span style="color: #138808; font-weight: 700;">₹</span>
+                    <span>Avg Monthly Wage: <b style="color: #000666;">₹{wage:,}</b></span>
+                </div>
+                <div style="background: #FFFFFF; border: 1px solid #C6C5D4; padding: 6px 12px; border-radius: 8px; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+                    <span style="color: #000666;">📈</span>
+                    <span>Local Demand: <b style="color: #000666;">{demand:.0f}/10</b></span>
+                </div>
+            </div>
+
+            {exp_html}
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid #EAE8E7;">
+                <span style="font-size: 11px; color: #138808; font-weight: 700; display: flex; align-items: center; gap: 4px;">
+                    <span>✓</span> Certified Skill Mission Pathway
+                </span>
+                <a href="{url}" target="_blank" style="background: #000666; color: #FFFFFF; text-decoration: none; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(0,6,102,0.15); transition: all 0.2s ease;">
+                    <span>Explore Course &amp; Modules</span>
+                    <span style="font-size: 12px;">↗</span>
+                </a>
+            </div>
         </div>
         """,
         unsafe_allow_html=True,
