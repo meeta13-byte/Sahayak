@@ -86,6 +86,9 @@ from stitch_theme import (
     render_stitch_completion_card,
     render_stitch_phrase_card,
     render_stitch_disclaimer,
+    render_stitch_kpi_card,
+    render_stitch_active_beneficiary_badge,
+    render_stitch_trade_card,
 )
 
 
@@ -216,6 +219,15 @@ with st.sidebar:
                 district=b_info.get("district", "Nagpur") if b_info else "Nagpur"
             )
             st.rerun()
+
+        active_prof_side = get_profile(st.session_state.get("active_beneficiary_id"))
+        if active_prof_side:
+            render_stitch_active_beneficiary_badge(
+                name=active_prof_side.get("name", "Unnamed Beneficiary"),
+                beneficiary_id=active_prof_side.get("beneficiary_id", ""),
+                district=active_prof_side.get("district", "Nagpur"),
+                language=active_prof_side.get("language", "Hindi"),
+            )
 
     st.markdown("<p style='font-size: 11px; font-weight: 700; color: #454652; text-transform: uppercase; margin: 12px 0 4px 0;'>Navigation</p>", unsafe_allow_html=True)
 
@@ -566,33 +578,19 @@ elif page in ["Skill Pathways", "🎙️ Voice Recommendation"]:
             top_n=3,
         )
         st.subheader("🎯 Recommended Pathways for Active Beneficiary")
+        import urllib.parse
         for i, m in enumerate(act_matches, start=1):
-            with st.container(border=True):
-                st.markdown(
-                    f"**{i}. {m['trade_name']}** · NSQF Level {m['nsqf_level']} · {m['sector']}"
-                )
-                cols = st.columns(3)
-                cols[0].metric("Local demand score", f"{m['demand_score']:.0f}/10")
-                cols[1].metric("Avg monthly wage", f"₹{m['avg_monthly_wage_inr']:,}")
-                cols[2].metric("Match score", f"{m['score']:.1f}")
-                if m.get("explanations"):
-                    st.caption(" · ".join(m["explanations"][:2]))
-
-                import urllib.parse
-                portal_query = urllib.parse.urlencode({
-                    "beneficiary_id": active_profile.get("beneficiary_id", ""),
-                    "name": active_profile.get("name", ""),
-                    "district": active_profile.get("district", district),
-                    "lang": active_profile.get("language", language_label),
-                    "trade": m["trade_name"],
-                    "skills": active_profile.get("skills", ""),
-                    "work": active_profile.get("current_livelihood", ""),
-                    "pref": active_profile.get("employment_preference", ""),
-                })
-                st.markdown(
-                    f'<a href="/app/static/skill-portal/index.html?{portal_query}" target="_blank" style="display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 700; color: #000666; text-decoration: none; padding: 4px 0;"><span>Explore {m["trade_name"]} on Skill Portal ↗</span></a>',
-                    unsafe_allow_html=True,
-                )
+            portal_query = urllib.parse.urlencode({
+                "beneficiary_id": active_profile.get("beneficiary_id", ""),
+                "name": active_profile.get("name", ""),
+                "district": active_profile.get("district", district),
+                "lang": active_profile.get("language", language_label),
+                "trade": m["trade_name"],
+                "skills": active_profile.get("skills", ""),
+                "work": active_profile.get("current_livelihood", ""),
+                "pref": active_profile.get("employment_preference", ""),
+            })
+            render_stitch_trade_card(i, m, portal_query)
 
         st.divider()
         st.subheader("🎙️ Re-match or Explore via Voice Input")
@@ -701,56 +699,14 @@ elif page in ["Skill Pathways", "🎙️ Voice Recommendation"]:
                 "3. Recommended pathways"
             )
 
-            for i, m in enumerate(
-                matches,
-                start=1,
-            ):
-
-                with st.container(
-                    border=True
-                ):
-
-                    st.markdown(
-                        f"**{i}. {m['trade_name']}**  · "
-                        f"NSQF Level {m['nsqf_level']}  · "
-                        f"{m['sector']}"
-                    )
-
-                    cols = st.columns(3)
-
-                    cols[0].metric(
-                        "Local demand score",
-                        f"{m['demand_score']:.0f}/10",
-                    )
-
-                    cols[1].metric(
-                        "Avg monthly wage",
-                        f"₹{m['avg_monthly_wage_inr']:,}",
-                    )
-
-                    cols[2].metric(
-                        "Matched keywords",
-                        len(m["matched_keywords"]),
-                    )
-
-                    if m["matched_keywords"]:
-                        st.caption(
-                            "Matched on: "
-                            + ", ".join(
-                                m["matched_keywords"]
-                            )
-                        )
-
-                    import urllib.parse
-                    portal_query = urllib.parse.urlencode({
-                        "trade": m["trade_name"],
-                        "lang": language_label,
-                        "district": district,
-                    })
-                    st.markdown(
-                        f'<a href="/app/static/skill-portal/index.html?{portal_query}" target="_blank" style="display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 700; color: #000666; text-decoration: none; padding: 4px 0;"><span>Explore {m["trade_name"]} on Skill Portal ↗</span></a>',
-                        unsafe_allow_html=True,
-                    )
+            import urllib.parse
+            for i, m in enumerate(matches, start=1):
+                portal_query = urllib.parse.urlencode({
+                    "trade": m["trade_name"],
+                    "lang": language_label,
+                    "district": district,
+                })
+                render_stitch_trade_card(i, m, portal_query)
 
             # ---------------------------------------------------------------
             # MULTILINGUAL RECOMMENDATION
@@ -1199,10 +1155,24 @@ elif page in ["Resume", "📄 Resume"]:
 
             with st.container(border=True):
                 st.markdown(
-                    f"### SKILL INDIA — BENEFICIARY RESUME\n"
-                    f"**Beneficiary ID:** `{profile.get('beneficiary_id')}` | "
-                    f"**District:** {profile.get('district')} | "
-                    f"**Language:** {profile.get('language')}"
+                    f"""
+                    <div style="position: relative; overflow: hidden; padding-bottom: 8px;">
+                        <div style="height: 3px; background: linear-gradient(90deg, #FF9933, #000666, #138808); margin: -1rem -1rem 1rem -1rem;"></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                            <div>
+                                <span style="font-size: 11px; font-weight: 800; color: #E65100; background: #FFF3E0; padding: 2px 8px; border-radius: 6px;">SKILL INDIA BENEFICIARY RESUME</span>
+                                <h3 style="font-size: 20px; font-weight: 800; color: #000666; margin: 4px 0 2px 0;">{profile.get('name', 'Beneficiary')}</h3>
+                            </div>
+                            <span style="background: #E8F5E9; color: #1B5E20; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 9999px;">✓ Verified Citizen Profile</span>
+                        </div>
+                        <div style="font-size: 12px; color: #454652; margin-top: 6px;">
+                            <b>ID:</b> <code>{profile.get('beneficiary_id')}</code> &nbsp;|&nbsp; 
+                            <b>District:</b> {profile.get('district')} &nbsp;|&nbsp; 
+                            <b>Language:</b> {profile.get('language')}
+                        </div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
                 )
                 st.divider()
 
@@ -1642,10 +1612,14 @@ elif page == "Attendance":
             flagged_att = sum(1 for a in all_att if a.get("flagged") is True)
 
             m_col1, m_col2, m_col3, m_col4 = st.columns(4)
-            m_col1.metric("Total Check-ins", total_att)
-            m_col2.metric("Verified (Pass)", passed_att)
-            m_col3.metric("Rejected (Fail)", failed_att)
-            m_col4.metric("Flagged for Review", flagged_att)
+            with m_col1:
+                render_stitch_kpi_card("Total Check-ins", total_att, "Recorded logs", icon="how_to_reg", badge_text="Total", badge_color="primary")
+            with m_col2:
+                render_stitch_kpi_card("Verified (Pass)", passed_att, f"{int(passed_att/total_att*100) if total_att else 0}% pass rate", icon="check_circle", badge_text="Valid", badge_color="success")
+            with m_col3:
+                render_stitch_kpi_card("Rejected (Fail)", failed_att, "Mismatch detected", icon="cancel", badge_text="Mismatch", badge_color="warning")
+            with m_col4:
+                render_stitch_kpi_card("Flagged for Review", flagged_att, "Supervisory audit", icon="flag", badge_text="Audit", badge_color="warning")
 
             att_table = [
                 {
@@ -1690,10 +1664,14 @@ elif page == "Dashboard":
     assigned_trades = sum(1 for p in profiles if p.get("recommended_trade"))
 
     b_col1, b_col2, b_col3, b_col4 = st.columns(4)
-    b_col1.metric("Total Beneficiaries", total_b)
-    b_col2.metric("Training Completed", completed_train)
-    b_col3.metric("Training In Progress", in_progress_train)
-    b_col4.metric("Assigned Pathways", assigned_trades)
+    with b_col1:
+        render_stitch_kpi_card("Total Beneficiaries", total_b, "Enrolled citizens", icon="groups", badge_text="Active", badge_color="primary")
+    with b_col2:
+        render_stitch_kpi_card("Training Completed", completed_train, f"{int(completed_train/total_b*100) if total_b else 0}% completion rate", icon="school", badge_text="Certified", badge_color="success")
+    with b_col3:
+        render_stitch_kpi_card("In Progress", in_progress_train, "Active batch trainees", icon="hourglass_top", badge_text="Ongoing", badge_color="warning")
+    with b_col4:
+        render_stitch_kpi_card("Assigned Pathways", assigned_trades, "NSQF trade mapped", icon="route", badge_text="Mapped", badge_color="primary")
 
     st.divider()
 
@@ -1720,10 +1698,15 @@ elif page == "Dashboard":
     avg_inc = sum(incomes) / len(incomes) if incomes else 0
 
     f_col1, f_col2, f_col3, f_col4 = st.columns(4)
-    f_col1.metric("Follow-ups Completed", completed_fol)
-    f_col2.metric("Employed Post-Training", working_count)
-    f_col3.metric("Seeking Re-skilling", unemployed_count)
-    f_col4.metric("Avg Monthly Income", f"₹{avg_inc:,.0f}" if avg_inc > 0 else "N/A")
+    with f_col1:
+        render_stitch_kpi_card("Surveys Completed", completed_fol, f"Out of {total_fol} milestones", icon="assignment_turned_in", badge_text="Verified", badge_color="primary")
+    with f_col2:
+        render_stitch_kpi_card("Employed Post-Training", working_count, f"{int(working_count/completed_fol*100) if completed_fol else 0}% retention rate", icon="work", badge_text="Employed", badge_color="success")
+    with f_col3:
+        render_stitch_kpi_card("Seeking Re-skilling", unemployed_count, "Transitioning or open", icon="published_with_changes", badge_text="Support", badge_color="warning")
+    with f_col4:
+        inc_str = f"₹{avg_inc:,.0f}/mo" if avg_inc > 0 else "N/A"
+        render_stitch_kpi_card("Avg Monthly Income", inc_str, "Self-reported wage", icon="payments", badge_text="Income", badge_color="success")
 
     st.divider()
 
@@ -1735,10 +1718,14 @@ elif page == "Dashboard":
     flagged_att = sum(1 for a in attendance if a.get("flagged") is True)
 
     a_col1, a_col2, a_col3, a_col4 = st.columns(4)
-    a_col1.metric("Attendance Attempts", total_att)
-    a_col2.metric("Verified (Pass)", passed_att)
-    a_col3.metric("Rejected (Fail)", failed_att)
-    a_col4.metric("Flagged for Review", flagged_att)
+    with a_col1:
+        render_stitch_kpi_card("Attendance Checks", total_att, "Phrase verification logs", icon="how_to_reg", badge_text="Total", badge_color="primary")
+    with a_col2:
+        render_stitch_kpi_card("Verified (Pass)", passed_att, f"{int(passed_att/total_att*100) if total_att else 0}% integrity rate", icon="verified", badge_text="Valid", badge_color="success")
+    with a_col3:
+        render_stitch_kpi_card("Rejected (Fail)", failed_att, "Mismatch challenges", icon="cancel", badge_text="Failed", badge_color="warning")
+    with a_col4:
+        render_stitch_kpi_card("Flagged for Audit", flagged_att, "Supervisor review queue", icon="flag", badge_text="Audit", badge_color="warning")
 
     st.divider()
 
